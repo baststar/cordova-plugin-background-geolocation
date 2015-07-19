@@ -1,4 +1,4 @@
-package com.tenforwardconsulting.cordova.bgloc.data.sqlite;
+package bam.backgroundgeolocation.bgloc.data.sqlite;
 
 
 import android.content.Context;

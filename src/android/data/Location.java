@@ -1,4 +1,4 @@
-package com.tenforwardconsulting.cordova.bgloc.data;
+package bam.backgroundgeolocation.bgloc.data;
 
 import java.util.Date;
 

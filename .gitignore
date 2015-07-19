@@ -1,3 +1,12 @@
 .DS_Store
-example/SampleApp/platforms
-example/SampleApp/plugins
+src/BackgroundGeolocationPlugin/.idea/
+src/BackgroundGeolocationPlugin/app/src/main/
+src/BackgroundGeolocationPlugin/gradlew
+src/android/.idea/
+src/android/
+src/BackgroundGeolocationPlugin/gradlew.bat
+src/BackgroundGeolocationPlugin/gradle/wrapper/gradle-wrapper.properties
+src/BackgroundGeolocationPlugin/gradle.properties
+src/BackgroundGeolocationPlugin/build.gradle
+src/BackgroundGeolocationPlugin/app/
+.project
