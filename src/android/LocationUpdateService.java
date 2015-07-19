@@ -56,10 +56,10 @@ import static java.lang.Math.*;
 
 public class LocationUpdateService extends Service implements LocationListener {
     private static final String TAG = "LocationUpdateService";
-    private static final String STATIONARY_REGION_ACTION        = "com.tenforwardconsulting.cordova.bgloc.STATIONARY_REGION_ACTION";
-    private static final String STATIONARY_ALARM_ACTION         = "com.tenforwardconsulting.cordova.bgloc.STATIONARY_ALARM_ACTION";
-    private static final String SINGLE_LOCATION_UPDATE_ACTION   = "com.tenforwardconsulting.cordova.bgloc.SINGLE_LOCATION_UPDATE_ACTION";
-    private static final String STATIONARY_LOCATION_MONITOR_ACTION = "com.tenforwardconsulting.cordova.bgloc.STATIONARY_LOCATION_MONITOR_ACTION";
+    private static final String STATIONARY_REGION_ACTION            = "bam.backgroundgeolocation.bgloc.STATIONARY_REGION_ACTION";
+    private static final String STATIONARY_ALARM_ACTION             = "bam.backgroundgeolocation.bgloc.STATIONARY_ALARM_ACTION";
+    private static final String SINGLE_LOCATION_UPDATE_ACTION       = "bam.backgroundgeolocation.bgloc.SINGLE_LOCATION_UPDATE_ACTION";
+    private static final String STATIONARY_LOCATION_MONITOR_ACTION  = "bam.backgroundgeolocation.bgloc.STATIONARY_LOCATION_MONITOR_ACTION";
     private static final long STATIONARY_TIMEOUT                                = 5 * 1000 * 60;    // 5 minutes.
     private static final long STATIONARY_LOCATION_POLLING_INTERVAL_LAZY         = 3 * 1000 * 60;    // 3 minutes.
     private static final long STATIONARY_LOCATION_POLLING_INTERVAL_AGGRESSIVE   = 1 * 1000 * 60;    // 1 minute.
@@ -95,6 +95,7 @@ public class LocationUpdateService extends Service implements LocationListener {
     private String notificationTitle = "Background checking";
     private String notificationText = "ENABLED";
     private Boolean stopOnTerminate;
+    private Boolean keepRunning;
 
     private ToneGenerator toneGenerator;
 
@@ -180,6 +181,8 @@ public class LocationUpdateService extends Service implements LocationListener {
             isDebugging = Boolean.parseBoolean(intent.getStringExtra("isDebugging"));
             notificationTitle = intent.getStringExtra("notificationTitle");
             notificationText = intent.getStringExtra("notificationText");
+            stopOnTerminate  = Boolean.parseBoolean(intent.getStringExtra("stopOnTerminate"));
+            keepRunning = Boolean.parseBoolean(intent.getStringExtra("keepRunning"));
 
             // Build a Notification required for running service in foreground.
             Intent main = new Intent(this, BackgroundGpsPlugin.class);
@@ -230,12 +233,15 @@ public class LocationUpdateService extends Service implements LocationListener {
 
     @Override
     public boolean stopService(Intent intent) {
-        Log.i(TAG, "- Received stop: " + intent);
-        cleanUp();
-        if (isDebugging) {
-            Toast.makeText(this, "Background location tracking stopped", Toast.LENGTH_SHORT).show();
+        if(!keepRunning){
+            Log.i(TAG, "- Received stop: " + intent);
+            cleanUp();
+            if (isDebugging) {
+                Toast.makeText(this, "Background location tracking stopped", Toast.LENGTH_SHORT).show();
+            }
+            return super.stopService(intent);
         }
-        return super.stopService(intent);
+        return true;
     }
 
     /**
