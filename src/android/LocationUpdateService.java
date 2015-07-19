@@ -233,15 +233,12 @@ public class LocationUpdateService extends Service implements LocationListener {
 
     @Override
     public boolean stopService(Intent intent) {
-        if(!keepRunning){
-            Log.i(TAG, "- Received stop: " + intent);
-            cleanUp();
-            if (isDebugging) {
-                Toast.makeText(this, "Background location tracking stopped", Toast.LENGTH_SHORT).show();
-            }
-            return super.stopService(intent);
+        Log.i(TAG, "- Received stop: " + intent);
+        cleanUp();
+        if (isDebugging) {
+            Toast.makeText(this, "Background location tracking stopped", Toast.LENGTH_SHORT).show();
         }
-        return true;
+        return super.stopService(intent);
     }
 
     /**
@@ -760,8 +757,10 @@ public class LocationUpdateService extends Service implements LocationListener {
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     @Override
     public void onTaskRemoved(Intent rootIntent) {
-        this.stopSelf();
-        super.onTaskRemoved(rootIntent);
+        if(!keepRunning){
+            this.stopSelf();
+            super.onTaskRemoved(rootIntent);
+        }
     }
 
     private class PostLocationTask extends AsyncTask<Object, Integer, Boolean> {
